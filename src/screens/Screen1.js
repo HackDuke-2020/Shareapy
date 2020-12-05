@@ -203,41 +203,43 @@ class Screen1 extends Component {
 						</View>
 					</TouchableOpacity>
 				</Modal>
-				<Content contentContainerStyle={styles.container}>
-					{/* <ExampleData /> */}
-					{this.props.user.posts &&
-						this.props.user.posts.map((obj) => {
-							if (obj.type === "accomplishment") {
+				<Content>
+					<View style={styles.container}>
+						{this.props.user.posts &&
+							this.props.user.posts.map((obj) => {
+								if (obj.type === "accomplishment") {
+									return (
+										<Accomplishment
+											key={obj.text + obj.type}
+											name={obj.name1}
+											text={obj.text}
+										/>
+									);
+								}
+								if (obj.type === "challenge") {
+									const isMe = this.props.user.displayName === obj.name2;
+									return (
+										<Challenge
+											makePost={this.props.makePost}
+											key={obj.text + obj.type}
+											name1={obj.name1}
+											name2={obj.name2}
+											text={obj.text}
+											isMe={isMe}
+										/>
+									);
+								}
+
 								return (
-									<Accomplishment
-										key={obj.text}
-										name={obj.name1}
-										text={obj.text}
-									/>
-								);
-							}
-							if (obj.type === "challenge") {
-								const isMe = this.props.user.displayName === obj.name2;
-								return (
-									<Challenge
-										key={obj.text}
+									<CompletedChallenge
+										key={obj.text + obj.type}
 										name1={obj.name1}
 										name2={obj.name2}
 										text={obj.text}
-										isMe={isMe}
 									/>
 								);
-							}
-
-							return (
-								<CompletedChallenge
-									key={obj.text}
-									name1={obj.name1}
-									name2={obj.name2}
-									text={obj.text}
-								/>
-							);
-						})}
+							})}
+					</View>
 				</Content>
 			</Container>
 		);
@@ -308,20 +310,6 @@ class Challenge extends Component {
 						}}
 					>
 						<Icon style={{ color: "green" }} type="Ionicons" name="send" />
-						{/* {this.props.isMe && (
-							<TouchableOpacity
-								style={{ justifyContent: "center", alignItems: "center" }}
-							>
-								<Icon
-									style={{ color: myBlue, marginTop: 10 }}
-									type="Ionicons"
-									name="checkmark-circle"
-								/>
-								<Text style={{ width: 40, right: 5 }} numberOfLines={1}>
-									Done
-								</Text>
-							</TouchableOpacity>
-						)} */}
 					</View>
 				</CardItem>
 				<CardItem>
@@ -336,6 +324,9 @@ class Challenge extends Component {
 								justifyContent: "center",
 								alignItems: "center",
 								flex: 1,
+							}}
+							onPress={() => {
+								this.props.makePost(name1, name2, text, "completedchallenge");
 							}}
 						>
 							<Icon
