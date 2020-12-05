@@ -30,19 +30,24 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { makePost } from "../redux/actions/post";
 
 const myBlue = "#147efb";
 const myGreen = "#008000";
 const myGray = "#808080";
 class Screen1 extends Component {
+	constructor(props) {
+		super();
+	}
 	state = {
-		fabActive: false,
 		overlayVisible: false,
 		modalType: "",
 		text: "",
+		challengeTo: "",
 	};
 
 	render() {
+		// console.log(this.props.user.posts);
 		const { width, height } = Dimensions.get("window");
 		return (
 			<Container>
@@ -78,13 +83,6 @@ class Screen1 extends Component {
 						>
 							<Icon name="send" style={{ color: "#147efb" }} />
 						</TouchableOpacity>
-						{/* <TouchableOpacity onPress={() => {}}>
-							<Icon
-								type="MaterialCommunityIcons"
-								name="shield-check"
-								style={{ color: "#147efb" }}
-							/>
-						</TouchableOpacity> */}
 					</Right>
 				</Header>
 				<Modal
@@ -137,7 +135,7 @@ class Screen1 extends Component {
 											style={{ borderColor: "black", marginBottom: 20 }}
 										>
 											<Input
-												autoCapitalize="words"
+												autoCapitalize="sentences"
 												keyboardAppearance="dark"
 												style={{
 													marginRight: 20,
@@ -145,14 +143,15 @@ class Screen1 extends Component {
 												}}
 												placeholderTextColor={myGray}
 												placeholder={"To: (name) "}
-												value={this.state.text}
-												onChangeText={(text) => this.setState({ text })}
+												value={this.state.challengeTo}
+												onChangeText={(challengeTo) =>
+													this.setState({ challengeTo })
+												}
 											/>
 										</Item>
 									)}
 									<Item rounded style={{ borderColor: "black" }}>
 										<Textarea
-											autoCapitalize="words"
 											keyboardAppearance="dark"
 											style={{
 												marginRight: 20,
@@ -181,7 +180,23 @@ class Screen1 extends Component {
 									left: (width * 1) / 4,
 								}}
 							>
-								<Button rounded onPress={() => {}}>
+								<Button
+									rounded
+									onPress={() => {
+										this.props.makePost(
+											this.props.user.displayName,
+											this.state.challengeTo,
+											this.state.text,
+											this.state.modalType,
+										);
+										this.setState({
+											overlayVisible: false,
+											modalType: "",
+											text: "",
+											challengeTo: "",
+										});
+									}}
+								>
 									<Text>Post</Text>
 								</Button>
 							</View>
@@ -189,22 +204,40 @@ class Screen1 extends Component {
 					</TouchableOpacity>
 				</Modal>
 				<Content contentContainerStyle={styles.container}>
-					<Accomplishment
-						name="Firstname Lastname"
-						text="Today I had a presentation for my Spanish class. I advertised at
-							the beginning and did 10 cancellations."
-					/>
-					<Challenge
-						name1="firstname lastname"
-						name2="Firstname Lastname"
-						text="I challenge you to do 20 intentional stutters tomorrow"
-						isMe={true}
-					/>
-					<CompletedChallenge
-						name1="firstname lastname"
-						name2="Firstname Lastname"
-						text="I challenge you to do 20 intentional stutters tomorrow"
-					/>
+					{/* <ExampleData /> */}
+					{this.props.user.posts &&
+						this.props.user.posts.map((obj) => {
+							if (obj.type === "accomplishment") {
+								return (
+									<Accomplishment
+										key={obj.text}
+										name={obj.name1}
+										text={obj.text}
+									/>
+								);
+							}
+							if (obj.type === "challenge") {
+								const isMe = this.props.user.displayName === obj.name2;
+								return (
+									<Challenge
+										key={obj.text}
+										name1={obj.name1}
+										name2={obj.name2}
+										text={obj.text}
+										isMe={isMe}
+									/>
+								);
+							}
+
+							return (
+								<CompletedChallenge
+									key={obj.text}
+									name1={obj.name1}
+									name2={obj.name2}
+									text={obj.text}
+								/>
+							);
+						})}
 				</Content>
 			</Container>
 		);
@@ -363,10 +396,38 @@ class CompletedChallenge extends Component {
 	}
 }
 
+class ExampleData extends Component {
+	render() {
+		return (
+			<View>
+				<Accomplishment
+					name="Firstname Lastname"
+					text="Today I had a presentation for my Spanish class. I advertised at
+							the beginning and did 10 cancellations."
+				/>
+				<Challenge
+					name1="firstname lastname"
+					name2="Firstname Lastname"
+					text="I challenge you to do 20 intentional stutters tomorrow"
+					isMe={true}
+				/>
+				<CompletedChallenge
+					name1="firstname lastname"
+					name2="Firstname Lastname"
+					text="I challenge you to do 20 intentional stutters tomorrow"
+				/>
+			</View>
+		);
+	}
+}
+
 const mapStateToProps = (state) => ({
 	user: state.user,
 });
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+	makePost: (name1, name2, text, type) =>
+		dispatch(makePost(name1, name2, text, type)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Screen1);
 

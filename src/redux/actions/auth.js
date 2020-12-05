@@ -16,7 +16,16 @@ const checkForSignedInUser = () => {
 					.get();
 				const queryData = querySnapshot.data();
 
-				const { messages } = queryData;
+				const { messages, following } = queryData;
+				let posts = queryData.posts;
+
+				const followersPosts = await getFollowersPosts(following);
+
+				posts = [...posts, ...followersPosts];
+
+				if (posts !== undefined) {
+					posts.sort((a, b) => (a.date > b.date ? -1 : 1));
+				}
 
 				userData = {
 					email: user.email,
@@ -24,11 +33,30 @@ const checkForSignedInUser = () => {
 					uid: user.uid,
 					messages,
 					isSignedIn: true,
+					posts,
 				};
 			}
 			dispatch({ type: "CHECKED_SIGNED_IN_USER", user: userData });
 		});
 	};
+};
+
+const getFollowersPosts = async (following) => {
+	let followersPosts = [];
+
+	for (const otherUid of following) {
+		const querySnapshot = await db
+			.collection("users")
+			.doc(otherUid)
+			.get();
+		const queryData = querySnapshot.data();
+		const otherPosts = queryData.posts;
+		if (otherPosts && otherPosts.length !== 0) {
+			followersPosts = [...followersPosts, ...otherPosts];
+		}
+	}
+
+	return followersPosts;
 };
 
 const login = (email, password) => {
@@ -61,7 +89,7 @@ const signup = (name, email, password) => {
 			await db
 				.collection("users")
 				.doc(currentUid)
-				.set({ messages: [] });
+				.set({ messages: [], posts: [], following: [] });
 		} catch (error) {
 			dispatch({ type: "SET_ERROR", errorType: "signupError", error });
 		}

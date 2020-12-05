@@ -12,6 +12,7 @@ class TabNavigator extends Component {
 		return (
 			<Tab.Navigator
 				tabBarOptions={{ showLabel: false, style: { height: 60 } }}
+				initialRouteName="Screen1"
 			>
 				<Tab.Screen
 					name="Screen1"

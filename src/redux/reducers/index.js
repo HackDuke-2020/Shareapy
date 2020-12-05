@@ -42,6 +42,19 @@ const rootReducer = (state = initialState, action) => {
 			};
 		}
 
+		case "UPDATE_POSTS": {
+			const newPosts = [...state.user.posts, action.post];
+			newPosts.sort((a, b) => (a.date > b.date ? -1 : 1));
+
+			return {
+				...state,
+				user: {
+					...state.user,
+					posts: newPosts,
+				},
+			};
+		}
+
 		default: {
 			return { ...state };
 		}
