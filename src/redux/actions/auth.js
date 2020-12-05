@@ -16,7 +16,7 @@ const checkForSignedInUser = () => {
 					.get();
 				const queryData = querySnapshot.data();
 
-				const { messages, following } = queryData;
+				const { messages, following, completed } = queryData;
 				let posts = queryData.posts;
 
 				const followersPosts = await getFollowersPosts(following);
@@ -34,6 +34,7 @@ const checkForSignedInUser = () => {
 					messages,
 					isSignedIn: true,
 					posts,
+					completed,
 				};
 			}
 			dispatch({ type: "CHECKED_SIGNED_IN_USER", user: userData });
@@ -89,7 +90,14 @@ const signup = (name, email, password) => {
 			await db
 				.collection("users")
 				.doc(currentUid)
-				.set({ messages: [], posts: [], following: [], name, followers: [] });
+				.set({
+					messages: [],
+					posts: [],
+					following: [],
+					name,
+					followers: [],
+					completed: [],
+				});
 		} catch (error) {
 			dispatch({ type: "SET_ERROR", errorType: "signupError", error });
 		}

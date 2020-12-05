@@ -29,4 +29,38 @@ const makePost = (name1, name2, text, type) => {
 	};
 };
 
-export { makePost };
+const acceptChallenge = (name1, name2, text, type) => {
+	return async (dispatch, getState) => {
+		console.log("dooty");
+		if (!name2) {
+			name2 = "";
+		}
+
+		const post = {
+			name1,
+			name2,
+			text,
+			type,
+			date: Date.now(),
+		};
+
+		const currentUid = auth.currentUser.uid;
+		await db
+			.collection("users")
+			.doc(currentUid)
+			.update({
+				posts: firebase.firestore.FieldValue.arrayUnion(post),
+			});
+
+		await db
+			.collection("users")
+			.doc(currentUid)
+			.update({
+				completed: firebase.firestore.FieldValue.arrayUnion(text),
+			});
+
+		dispatch({ type: "UPDATE_CHALLENGES", post });
+	};
+};
+
+export { makePost, acceptChallenge };

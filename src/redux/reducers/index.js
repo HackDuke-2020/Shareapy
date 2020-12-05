@@ -56,6 +56,20 @@ const rootReducer = (state = initialState, action) => {
 			};
 		}
 
+		case "UPDATE_CHALLENGES": {
+			const newPosts = [...state.user.posts, action.post];
+			newPosts.sort((a, b) => (a.date > b.date ? -1 : 1));
+
+			return {
+				...state,
+				user: {
+					...state.user,
+					posts: newPosts,
+					completed: [...state.user.completed, action.post.text],
+				},
+			};
+		}
+
 		case "CLEAR_SEARCHED_USER": {
 			return {
 				...state,

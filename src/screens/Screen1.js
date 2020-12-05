@@ -30,7 +30,7 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { makePost } from "../redux/actions/post";
+import { makePost, acceptChallenge } from "../redux/actions/post";
 
 const myBlue = "#147efb";
 const myGreen = "#008000";
@@ -210,18 +210,23 @@ class Screen1 extends Component {
 								if (obj.type === "accomplishment") {
 									return (
 										<Accomplishment
-											key={obj.text + obj.type}
+											key={obj.text + obj.type + Math.random()}
 											name={obj.name1}
 											text={obj.text}
 										/>
 									);
 								}
 								if (obj.type === "challenge") {
-									const isMe = this.props.user.displayName === obj.name2;
+									const isMe =
+										this.props.user.displayName === obj.name2 &&
+										!this.props.user.completed.includes(obj.text);
+									// console.log(obj.text);
+									// console.log(this.props.user.completed);
+									// console.log("\n");
 									return (
 										<Challenge
-											makePost={this.props.makePost}
-											key={obj.text + obj.type}
+											acceptChallenge={this.props.acceptChallenge}
+											key={obj.text + obj.type + Math.random()}
 											name1={obj.name1}
 											name2={obj.name2}
 											text={obj.text}
@@ -232,7 +237,7 @@ class Screen1 extends Component {
 
 								return (
 									<CompletedChallenge
-										key={obj.text + obj.type}
+										key={obj.text + obj.type + Math.random()}
 										name1={obj.name1}
 										name2={obj.name2}
 										text={obj.text}
@@ -326,7 +331,13 @@ class Challenge extends Component {
 								flex: 1,
 							}}
 							onPress={() => {
-								this.props.makePost(name1, name2, text, "completedchallenge");
+								console.log("fuck");
+								this.props.acceptChallenge(
+									name1,
+									name2,
+									text,
+									"completedchallenge",
+								);
 							}}
 						>
 							<Icon
@@ -357,10 +368,9 @@ class CompletedChallenge extends Component {
 			>
 				<CardItem header bordered>
 					<View style={{ flex: 8 }}>
-						<Text style={{ color: "#147efb" }}>{`${name1} challenged:`}</Text>
-						<Text style={{ color: "#147efb", marginTop: 10 }}>
-							{`${name2}`}
-						</Text>
+						<Text
+							style={{ color: "#147efb" }}
+						>{`${name2} completed ${name1}'s challenge:`}</Text>
 					</View>
 					<View
 						style={{
@@ -414,10 +424,13 @@ class ExampleData extends Component {
 
 const mapStateToProps = (state) => ({
 	user: state.user,
+	posts: state.user.posts,
 });
 const mapDispatchToProps = (dispatch) => ({
 	makePost: (name1, name2, text, type) =>
 		dispatch(makePost(name1, name2, text, type)),
+	acceptChallenge: (name1, name2, text, type) =>
+		dispatch(acceptChallenge(name1, name2, text, type)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Screen1);

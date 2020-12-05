@@ -236,7 +236,7 @@ const Posts = ({ props }) => {
 					if (obj.type === "accomplishment") {
 						return (
 							<Accomplishment
-								key={obj.text + obj.type}
+								key={obj.text + obj.type + Math.random()}
 								name={obj.name1}
 								text={obj.text}
 							/>
@@ -246,7 +246,7 @@ const Posts = ({ props }) => {
 						return (
 							<Challenge
 								makePost={props.makePost}
-								key={obj.text + obj.type}
+								key={obj.text + obj.type + Math.random()}
 								name1={obj.name1}
 								name2={obj.name2}
 								text={obj.text}
@@ -257,7 +257,7 @@ const Posts = ({ props }) => {
 
 					return (
 						<CompletedChallenge
-							key={obj.text + obj.type}
+							key={obj.text + obj.type + Math.random()}
 							name1={obj.name1}
 							name2={obj.name2}
 							text={obj.text}
