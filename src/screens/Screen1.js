@@ -25,12 +25,25 @@ class Screen1 extends Component {
 			<Container>
 				<Header>
 					<Body>
-						<Title>Screen1</Title>
+						<Title>Activity</Title>
 					</Body>
 				</Header>
 				<Content contentContainerStyle={styles.container}>
-					<Accomplishment />
-					<Challenge />
+					<Accomplishment
+						name="Firstname Lastname"
+						text="Today I had a presentation for my Spanish class. I advertised at
+							the beginning and did 10 cancellations."
+					/>
+					<Challenge
+						name1="firstname lastname"
+						name2="Firstname Lastname"
+						text="I challenge you to do 20 intentional stutters tomorrow"
+					/>
+					<CompletedChallenge
+						name1="firstname lastname"
+						name2="Firstname Lastname"
+						text="I challenge you to do 20 intentional stutters tomorrow"
+					/>
 				</Content>
 			</Container>
 		);
@@ -39,6 +52,7 @@ class Screen1 extends Component {
 
 class Accomplishment extends Component {
 	render() {
+		const { name, text } = this.props;
 		return (
 			<Card
 				style={{
@@ -49,23 +63,22 @@ class Accomplishment extends Component {
 				}}
 			>
 				<CardItem header bordered>
-					<Left>
-						<Text style={{ color: "#147efb" }}>Firstname Lastname</Text>
-					</Left>
-					<Right style={{ justifyContent: "flex-end" }}>
+					<View style={{ flex: 8 }}>
+						<Text style={{ color: "#147efb" }}>{`${name}`}</Text>
+					</View>
+					<View
+						style={{ justifyContent: "flex-end", width: 40, flex: 1, left: 20 }}
+					>
 						<Icon
 							style={{ color: "green" }}
 							type="MaterialCommunityIcons"
-							name="shield-check"
+							name="trophy"
 						/>
-					</Right>
+					</View>
 				</CardItem>
 				<CardItem>
 					<Body>
-						<Text>
-							Today I had a presentation for my Spanish class. I advertised at
-							the beginning and did 10 cancellations.
-						</Text>
+						<Text>{`${text}`}</Text>
 					</Body>
 				</CardItem>
 			</Card>
@@ -75,6 +88,7 @@ class Accomplishment extends Component {
 
 class Challenge extends Component {
 	render() {
+		const { name1, name2, text } = this.props;
 		return (
 			<Card
 				style={{
@@ -85,19 +99,70 @@ class Challenge extends Component {
 				}}
 			>
 				<CardItem header bordered>
-					<Left style={{ flexDirection: "column", flex: 1 }}>
-						<Text style={{ color: "#147efb" }}>Firstname Lastname</Text>
-						<Text
-							style={{ color: "#147efb", marginTop: 10 }}
-						>{`Firstname Lastname`}</Text>
-					</Left>
-					<Right style={{ justifyContent: "flex-end", width: 300 }}>
+					<View style={{ flex: 8 }}>
+						<Text style={{ color: "#147efb" }}>{`${name1} challenges:`}</Text>
+						<Text style={{ color: "#147efb", marginTop: 10 }}>
+							{`${name2}`}
+						</Text>
+					</View>
+					<View
+						style={{
+							justifyContent: "flex-end",
+							width: 40,
+							flex: 1,
+							left: 20,
+						}}
+					>
 						<Icon style={{ color: "green" }} type="Ionicons" name="send" />
-					</Right>
+					</View>
 				</CardItem>
 				<CardItem>
 					<Body>
-						<Text>I challenge you to do 20 intentional stutters tomorrow</Text>
+						<Text>{`${text}`}</Text>
+					</Body>
+				</CardItem>
+			</Card>
+		);
+	}
+}
+
+class CompletedChallenge extends Component {
+	render() {
+		const { name1, name2, text } = this.props;
+		return (
+			<Card
+				style={{
+					padding: 10,
+					marginLeft: 10,
+					marginRight: 10,
+					borderRadius: 15,
+				}}
+			>
+				<CardItem header bordered>
+					<View style={{ flex: 8 }}>
+						<Text style={{ color: "#147efb" }}>{`${name1} challenged:`}</Text>
+						<Text style={{ color: "#147efb", marginTop: 10 }}>
+							{`${name2}`}
+						</Text>
+					</View>
+					<View
+						style={{
+							justifyContent: "flex-end",
+							width: 40,
+							flex: 1,
+							left: 20,
+						}}
+					>
+						<Icon
+							style={{ color: "green" }}
+							type="MaterialCommunityIcons"
+							name="shield-check"
+						/>
+					</View>
+				</CardItem>
+				<CardItem>
+					<Body>
+						<Text>{`${text}`}</Text>
 					</Body>
 				</CardItem>
 			</Card>
