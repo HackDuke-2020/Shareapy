@@ -1,6 +1,7 @@
 const initialState = {
 	user: { isSignedIn: false, messages: [] },
 	errors: { loginError: null, signupError: null },
+	searchedUser: null,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -52,6 +53,21 @@ const rootReducer = (state = initialState, action) => {
 					...state.user,
 					posts: newPosts,
 				},
+			};
+		}
+
+		case "CLEAR_SEARCHED_USER": {
+			return {
+				...state,
+				searchedUser: null,
+			};
+		}
+
+		case "SET_SEARCHED_USER": {
+			console.log(action.user);
+			return {
+				...state,
+				searchedUser: action.user,
 			};
 		}
 

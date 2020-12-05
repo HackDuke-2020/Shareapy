@@ -89,7 +89,7 @@ const signup = (name, email, password) => {
 			await db
 				.collection("users")
 				.doc(currentUid)
-				.set({ messages: [], posts: [], following: [] });
+				.set({ messages: [], posts: [], following: [], name, followers: [] });
 		} catch (error) {
 			dispatch({ type: "SET_ERROR", errorType: "signupError", error });
 		}

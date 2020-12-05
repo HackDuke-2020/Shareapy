@@ -29,6 +29,8 @@ import {
 } from "native-base";
 import { connect } from "react-redux";
 import { sendMessage } from "../redux/actions/messages";
+import { search } from "../redux/actions/follow";
+import { follow } from "../redux/actions/follow";
 
 class Screen2 extends Component {
 	state = {
@@ -112,7 +114,7 @@ class Screen2 extends Component {
 							>
 								<Body style={{ alignItems: "center" }}>
 									{this.state.modalType === "Search" && (
-										<Text>Search for friends</Text>
+										<Text>Search for Friends</Text>
 									)}
 								</Body>
 							</Header>
@@ -146,20 +148,30 @@ class Screen2 extends Component {
 									left: (width * 1) / 4 - 12,
 								}}
 							>
-								<Button rounded onPress={() => {}}>
+								<Button
+									rounded
+									onPress={() => {
+										this.props.search(this.state.text);
+									}}
+								>
 									<Text>Search</Text>
 								</Button>
 							</View>
-							{true && (
+							{this.props.searchedUser && (
 								<View style={{ alignItems: "center", marginTop: 30 }}>
-									<Text>Firstname Lastname</Text>
+									<Text>{this.props.searchedUser.name}</Text>
 									<View
 										style={{
 											alignItems: "center",
 											marginTop: 10,
 										}}
 									>
-										<Button rounded onPress={() => {}}>
+										<Button
+											rounded
+											onPress={() => {
+												this.props.follow(this.props.searchedUser.uid);
+											}}
+										>
 											<Text>Follow</Text>
 										</Button>
 									</View>
@@ -205,9 +217,12 @@ class Screen2 extends Component {
 const mapStateToProps = (state) => ({
 	messages: state.user.messages,
 	user: state.user,
+	searchedUser: state.searchedUser,
 });
 const mapDispatchToProps = (dispatch) => ({
 	sendMessage: (message) => dispatch(sendMessage(message)),
+	search: (name) => dispatch(search(name)),
+	follow: (uid) => dispatch(follow(uid)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Screen2);
