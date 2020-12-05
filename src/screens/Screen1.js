@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import {
 	Container,
 	Header,
@@ -14,6 +14,8 @@ import {
 	Content,
 	ListItem,
 	Badge,
+	Card,
+	CardItem,
 } from "native-base";
 import { connect } from "react-redux";
 
@@ -27,15 +29,78 @@ class Screen1 extends Component {
 					</Body>
 				</Header>
 				<Content contentContainerStyle={styles.container}>
-					{this.props.user && (
-						<View style={{ alignItems: "center", margin: 5 }}>
-							<Text>{`name: ${this.props.user.displayName}`}</Text>
-							<Text>{`email: ${this.props.user.email}`}</Text>
-							<Text>{`uid: ${this.props.user.uid}`}</Text>
-						</View>
-					)}
+					<Accomplishment />
+					<Challenge />
 				</Content>
 			</Container>
+		);
+	}
+}
+
+class Accomplishment extends Component {
+	render() {
+		return (
+			<Card
+				style={{
+					padding: 10,
+					marginLeft: 10,
+					marginRight: 10,
+					borderRadius: 15,
+				}}
+			>
+				<CardItem header bordered>
+					<Left>
+						<Text style={{ color: "#147efb" }}>Firstname Lastname</Text>
+					</Left>
+					<Right style={{ justifyContent: "flex-end" }}>
+						<Icon
+							style={{ color: "green" }}
+							type="MaterialCommunityIcons"
+							name="shield-check"
+						/>
+					</Right>
+				</CardItem>
+				<CardItem>
+					<Body>
+						<Text>
+							Today I had a presentation for my Spanish class. I advertised at
+							the beginning and did 10 cancellations.
+						</Text>
+					</Body>
+				</CardItem>
+			</Card>
+		);
+	}
+}
+
+class Challenge extends Component {
+	render() {
+		return (
+			<Card
+				style={{
+					padding: 10,
+					marginLeft: 10,
+					marginRight: 10,
+					borderRadius: 15,
+				}}
+			>
+				<CardItem header bordered>
+					<Left style={{ flexDirection: "column", flex: 1 }}>
+						<Text style={{ color: "#147efb" }}>Firstname Lastname</Text>
+						<Text
+							style={{ color: "#147efb", marginTop: 10 }}
+						>{`Firstname Lastname`}</Text>
+					</Left>
+					<Right style={{ justifyContent: "flex-end", width: 300 }}>
+						<Icon style={{ color: "green" }} type="Ionicons" name="send" />
+					</Right>
+				</CardItem>
+				<CardItem>
+					<Body>
+						<Text>I challenge you to do 20 intentional stutters tomorrow</Text>
+					</Body>
+				</CardItem>
+			</Card>
 		);
 	}
 }
@@ -50,7 +115,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Screen1);
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
+		// alignItems: "center",
+		// justifyContent: "center",
 	},
 });

@@ -6,6 +6,7 @@ import Login from "../screens/Login";
 import Signup from "../screens/Signup";
 import Loading from "../screens/Loading";
 import Screen4 from "../screens/Screen4";
+import Screen5 from "../screens/Screen5";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ class StackNavigator extends Component {
 				<Stack.Screen name="Login" component={Login} />
 				<Stack.Screen name="Signup" component={Signup} />
 				<Stack.Screen name="Screen4" component={Screen4} />
+				<Stack.Screen name="Screen5" component={Screen5} />
 				<Stack.Screen name="Main" component={TabNavigator} />
 			</Stack.Navigator>
 		);

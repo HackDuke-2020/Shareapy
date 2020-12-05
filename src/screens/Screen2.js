@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import {
 	Container,
 	Header,
@@ -37,9 +37,19 @@ class Screen2 extends Component {
 		return (
 			<Container>
 				<Header>
+					<Left />
 					<Body>
 						<Title>Screen2</Title>
 					</Body>
+					<Right>
+						<TouchableOpacity
+							onPress={() => {
+								this.props.navigation.navigate("Screen5");
+							}}
+						>
+							<Icon name="book" style={{ color: "gray" }} />
+						</TouchableOpacity>
+					</Right>
 				</Header>
 				<Content contentContainerStyle={styles.container}>
 					<Form style={{ width, padding: 10 }}>
