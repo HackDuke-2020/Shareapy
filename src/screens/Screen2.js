@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Dimensions, TouchableOpacity, Image, Settings, Modal } from "react-native";
+import {
+	View,
+	StyleSheet,
+	Dimensions,
+	TouchableOpacity,
+	Image,
+	Settings,
+	Modal,
+} from "react-native";
 import {
 	Container,
 	Header,
@@ -16,6 +24,8 @@ import {
 	Form,
 	Item,
 	Input,
+	Card,
+	CardItem,
 } from "native-base";
 import { connect } from "react-redux";
 import { sendMessage } from "../redux/actions/messages";
@@ -37,26 +47,25 @@ class Screen2 extends Component {
 		const { width, height } = Dimensions.get("window");
 		const { message } = this.state;
 		const { messages } = this.props;
-		const {myGray} =  "#808080";
+		const { myGray } = "#808080";
 
 		return (
 			<Container>
 				<Header>
-				<Left>
-						<TouchableOpacity onPress={() => {
-							this.setState({
-								overlayVisible: !this.state.overlayVisible,
-								modalType: "Search",
-						});
-						}}
-					>
-							<Icon name="search" style={{ color: "#147efb" }}/>
-							
+					<Left>
+						<TouchableOpacity
+							onPress={() => {
+								this.setState({
+									overlayVisible: !this.state.overlayVisible,
+									modalType: "Search",
+								});
+							}}
+						>
+							<Icon name="search" style={{ color: "#147efb" }} />
 						</TouchableOpacity>
-						
 					</Left>
 					<Body>
-						<Title>USERNAME</Title>
+						<Title>{this.props.user.displayName}</Title>
 					</Body>
 					<Right>
 						<TouchableOpacity
@@ -67,12 +76,11 @@ class Screen2 extends Component {
 							<Icon name="trophy" style={{ color: "#147efb" }} />
 						</TouchableOpacity>
 					</Right>
-					
 				</Header>
 				<Modal
 					transparent
 					animationType="slide"
-					visible = {this.state.overlayVisible}
+					visible={this.state.overlayVisible}
 				>
 					<TouchableOpacity
 						activeOpacity={1}
@@ -106,11 +114,10 @@ class Screen2 extends Component {
 									{this.state.modalType === "Search" && (
 										<Text>Search for friends</Text>
 									)}
-								
-								</Body> 
+								</Body>
 							</Header>
 							<View style={{ paddingTop: 20 }}>
-								 <Form>
+								<Form>
 									{this.state.modalType === "Search" && (
 										<Item
 											rounded
@@ -124,38 +131,52 @@ class Screen2 extends Component {
 													marginLeft: 20,
 												}}
 												placeholderTextColor={myGray}
-												placeholder={"Austin_Appleseed"}
-												 value={this.state.text}
-												 onChangeText={(text) => this.setState({ text })}
+												placeholder={"Name"}
+												value={this.state.text}
+												onChangeText={(text) => this.setState({ text })}
 											/>
 										</Item>
 									)}
-								</Form> 
+								</Form>
 							</View>
 							<View
 								style={{
 									alignItems: "center",
 									marginTop: 10,
-									left: (width * 1) / 4,
+									left: (width * 1) / 4 - 12,
 								}}
 							>
 								<Button rounded onPress={() => {}}>
 									<Text>Search</Text>
 								</Button>
 							</View>
+							{true && (
+								<View style={{ alignItems: "center", marginTop: 30 }}>
+									<Text>Firstname Lastname</Text>
+									<View
+										style={{
+											alignItems: "center",
+											marginTop: 10,
+										}}
+									>
+										<Button rounded onPress={() => {}}>
+											<Text>Follow</Text>
+										</Button>
+									</View>
+								</View>
+							)}
 						</View>
 					</TouchableOpacity>
 				</Modal>
 				<Content>
-						<Image source ={require('../../assets/icon.png')} style={styles.profilepic}></Image>
-						
-				
-								<Followingers/>
-								<SettingsBox/>
-					
-					
-					
-					
+					<Image
+						source={require("../../assets/icon.png")}
+						style={styles.profilepic}
+					></Image>
+
+					<Followingers />
+					<SettingsBox user={this.props.user} />
+
 					{/* <List>
 						{messages &&
 							messages.map((text) => (
@@ -174,7 +195,7 @@ class Screen2 extends Component {
 					</List>  */}
 
 					<View>
-						<Posts/>
+						<Posts props={this.props} />
 					</View>
 				</Content>
 			</Container>
@@ -183,88 +204,98 @@ class Screen2 extends Component {
 }
 const mapStateToProps = (state) => ({
 	messages: state.user.messages,
+	user: state.user,
 });
 const mapDispatchToProps = (dispatch) => ({
 	sendMessage: (message) => dispatch(sendMessage(message)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Screen2);
-const Posts = () =>
-{	
-	
-		return(
-			<View>
-				<Text> Share your first Post!</Text>
-			</View>
-		)
 
+const Posts = ({ props }) => {
+	return (
+		<View>
+			{props.user.posts.length === 0 && <Text> Share your first Post!</Text>}
+			{props.user.posts &&
+				props.user.posts.map((obj) => {
+					if (obj.type === "accomplishment") {
+						return (
+							<Accomplishment
+								key={obj.text + obj.type}
+								name={obj.name1}
+								text={obj.text}
+							/>
+						);
+					}
+					if (obj.type === "challenge") {
+						return (
+							<Challenge
+								makePost={props.makePost}
+								key={obj.text + obj.type}
+								name1={obj.name1}
+								name2={obj.name2}
+								text={obj.text}
+								isMe={false}
+							/>
+						);
+					}
 
-	}
-const SettingsBox = () =>{
-	return(
+					return (
+						<CompletedChallenge
+							key={obj.text + obj.type}
+							name1={obj.name1}
+							name2={obj.name2}
+							text={obj.text}
+						/>
+					);
+				})}
+		</View>
+	);
+};
+
+const SettingsBox = ({ user }) => {
+	return (
 		<View>
 			<Form>
 				<Item style={{ borderColor: "gray", margin: 5 }}>
-							<Icon type="Ionicons" name="person" />
-							<Input
-								placeholder="Name"
-								autoCapitalize="words"
-								value=""
-								onChangeText={(message) => this.setState({ message })}
-							/>
-						</Item>
-						<Item style={{ borderColor: "gray", margin: 5 }}>
-							<Icon type="Ionicons" name="person" />
-							<Input
-								placeholder="Username"
-								autoCapitalize="words"
-								value=""
-								onChangeText={(message) => this.setState({ message })}
-							/>
-						</Item>
-						<Item style={{ borderColor: "gray", margin: 5 }}>
-							<Icon type="Ionicons" name="person"  />
-							<Input
-								placeholder="Email"
-								autoCapitalize="words"
-								value=""
-								onChangeText={(message) => this.setState({ message })}
-							/>
-							</Item>
-							<Item style={{ borderColor: "gray", margin: 5 }}>
-							<Icon type="Ionicons" name="person" />
-							<Input
-								placeholder="Password"
-								autoCapitalize="words"
-								value=""
-								onChangeText={(message) => this.setState({ message })}
-							/>
-							</Item>
-							
-					</Form>
+					<Icon type="Ionicons" name="person" />
+					<Input
+						placeholder="Name"
+						autoCapitalize="words"
+						value={user.displayName}
+						onChangeText={(message) => this.setState({ message })}
+					/>
+				</Item>
+				<Item style={{ borderColor: "gray", margin: 5 }}>
+					<Icon type="Ionicons" name="md-mail" />
+					<Input
+						placeholder="Email"
+						autoCapitalize="words"
+						value={user.email}
+						onChangeText={(message) => this.setState({ message })}
+					/>
+				</Item>
+			</Form>
 		</View>
-		
-		)
-
-}
- const Followingers = () =>{
-	 return(
-		 <View style={styles.follows}>
-			 <Text>Followers: {"\n"} 837</Text>
-			 <Text>Following:{"\n"} 292</Text>
-		 </View>
-	 )
-
- }
+	);
+};
+const Followingers = () => {
+	return (
+		<View style={styles.follows}>
+			<Text>Followers: {"\n"} 837</Text>
+			<Text>Following:{"\n"} 292</Text>
+		</View>
+	);
+};
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	profilepic:{
-		alignSelf:"center",
-		width:200,
+	profilepic: {
+		alignSelf: "center",
+		width: 200,
 		height: 200,
 		borderRadius: 100,
 		overflow: "hidden",
@@ -272,12 +303,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	follows: {
-		flexDirection: 'row',
-		textAlign: 'center',
+		flexDirection: "row",
+		textAlign: "center",
 		alignSelf: "center",
-
-		
-	}
+	},
 	// name: {
 	// 	textAlign: "center",
 	// 	alignItems: "center",
@@ -290,8 +319,145 @@ const styles = StyleSheet.create({
 	// 	flexDirection: 'row',
 	// 	textAlign: 'center',
 	// 	padding: 130,
-		
-	// }
-
 });
 
+class Accomplishment extends Component {
+	render() {
+		const { name, text } = this.props;
+		return (
+			<Card
+				style={{
+					padding: 10,
+					marginLeft: 10,
+					marginRight: 10,
+					borderRadius: 15,
+				}}
+			>
+				<CardItem header bordered>
+					<View style={{ flex: 8 }}>
+						<Text style={{ color: "#147efb" }}>{`${name}`}</Text>
+					</View>
+					<View
+						style={{ justifyContent: "flex-end", width: 40, flex: 1, left: 20 }}
+					>
+						<Icon
+							style={{ color: "green" }}
+							type="MaterialCommunityIcons"
+							name="trophy"
+						/>
+					</View>
+				</CardItem>
+				<CardItem>
+					<Body>
+						<Text>{`${text}`}</Text>
+					</Body>
+				</CardItem>
+			</Card>
+		);
+	}
+}
+
+class Challenge extends Component {
+	render() {
+		const { name1, name2, text } = this.props;
+		return (
+			<Card
+				style={{
+					padding: 10,
+					marginLeft: 10,
+					marginRight: 10,
+					borderRadius: 15,
+				}}
+			>
+				<CardItem header bordered>
+					<View style={{ flex: 8 }}>
+						<Text style={{ color: "#147efb" }}>{`${name1} challenges:`}</Text>
+						<Text style={{ color: "#147efb", marginTop: 10 }}>
+							{`${name2}`}
+						</Text>
+					</View>
+					<View
+						style={{
+							justifyContent: "flex-end",
+							width: 50,
+							flex: 1,
+							left: 20,
+						}}
+					>
+						<Icon style={{ color: "green" }} type="Ionicons" name="send" />
+					</View>
+				</CardItem>
+				<CardItem>
+					<Body>
+						<Text>{`${text}`}</Text>
+					</Body>
+				</CardItem>
+				{this.props.isMe && (
+					<CardItem footer>
+						<TouchableOpacity
+							style={{
+								justifyContent: "center",
+								alignItems: "center",
+								flex: 1,
+							}}
+							onPress={() => {
+								this.props.makePost(name1, name2, text, "completedchallenge");
+							}}
+						>
+							<Icon
+								style={{ color: myBlue, marginTop: 10 }}
+								type="Ionicons"
+								name="checkmark-circle"
+							/>
+							<Text numberOfLines={1}>Mark as Done</Text>
+						</TouchableOpacity>
+					</CardItem>
+				)}
+			</Card>
+		);
+	}
+}
+
+class CompletedChallenge extends Component {
+	render() {
+		const { name1, name2, text } = this.props;
+		return (
+			<Card
+				style={{
+					padding: 10,
+					marginLeft: 10,
+					marginRight: 10,
+					borderRadius: 15,
+				}}
+			>
+				<CardItem header bordered>
+					<View style={{ flex: 8 }}>
+						<Text style={{ color: "#147efb" }}>{`${name1} challenged:`}</Text>
+						<Text style={{ color: "#147efb", marginTop: 10 }}>
+							{`${name2}`}
+						</Text>
+					</View>
+					<View
+						style={{
+							justifyContent: "flex-end",
+							width: 40,
+							flex: 1,
+							left: 20,
+						}}
+					>
+						<Icon
+							style={{ color: "green" }}
+							type="MaterialCommunityIcons"
+							name="shield-check"
+						/>
+					</View>
+				</CardItem>
+				<CardItem>
+					<Body>
+						<Text>{`${text}`}</Text>
+					</Body>
+				</CardItem>
+			</Card>
+		);
+	}
+}
