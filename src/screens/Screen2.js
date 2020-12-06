@@ -193,7 +193,8 @@ class Screen2 extends Component {
 					></Image>
 
 					<Followingers user={this.props.user} />
-					<SettingsBox user={this.props.user} />
+					{console.log(this.props.user)}
+					<SettingsBox namesake={this.props.user.displayName} emailsake = {this.props.user.email} />
 
 					{/* <List>
 						{messages &&
@@ -234,6 +235,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(Screen2);
 
 const Posts = ({ props }) => {
+	
 	return (
 		<View>
 			{props.user.justMyPosts && props.user.justMyPosts.length !== 0 && (
@@ -281,40 +283,49 @@ const Posts = ({ props }) => {
 	);
 };
 
-const SettingsBox = ({ user }) => {
+const SettingsBox = ({namesake, emailsake}) => {
+	
 	return (
 		<View>
-			<Form>
-				<Item style={{ borderColor: "gray", margin: 5 }}>
-					<Icon type="Ionicons" name="person" />
-					<Input
-						placeholder="Name"
-						autoCapitalize="words"
-						value={user.displayName}
-						onChangeText={(message) => this.setState({ message })}
-					/>
-				</Item>
-				<Item style={{ borderColor: "gray", margin: 5 }}>
-					<Icon type="Ionicons" name="md-mail" />
-					<Input
-						placeholder="Email"
-						autoCapitalize="words"
-						value={user.email}
-						onChangeText={(message) => this.setState({ message })}
-					/>
-				</Item>
-			</Form>
+			<Card style={{
+					padding: 5,
+					marginLeft: 0,
+					marginRight: 0,
+					borderRadius: 15,
+					fontWeight: 'bold',
+				}}>
+			<Text style= {{ borderColor: "gray", margin: 5, fontWeight: 'bold',}} ><Icon type="Ionicons" name="person" style={{ color: "#808080", }}/>		
+			     {namesake} </Text>
+			</Card>
+			<Card style={{
+					padding: 5,
+					marginLeft: 0,
+					marginRight: 0,
+					borderRadius: 15,
+				}}>
+			<Text style= {{ borderColor: "gray", margin: 5, fontWeight: 'bold',}}> <Icon type="Ionicons" name="mail" style={{ color: "#808080", }} />{emailsake}</Text></Card>
+	
+				
+			
+			
 		</View>
 	);
 };
 const Followingers = ({ user }) => {
 	return (
+		
 		<View style={{ ...styles.follows, justifyContent: "space-around" }}>
-			<Text style={{ marginRight: 30 }}>{`Followers\n${
+			<Card style={{flexDirection: 'row', padding: 5,
+					marginLeft: 0,
+					marginRight: 0,
+					borderRadius: 15,}}>
+			<Text style={{ marginRight: 30, fontWeight: "bold", }}>{`Followers\n${
 				user.followers ? user.followers.length : 0
 			}`}</Text>
-			<Text>{`Following\n${user.following ? user.following.length : 0}`}</Text>
+			<Text style ={{fontWeight: "bold",}}>{`Following\n${user.following ? user.following.length : 0}`}</Text>
+		</Card>
 		</View>
+		
 	);
 };
 const styles = StyleSheet.create({
@@ -337,6 +348,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		alignSelf: "center",
 		justifyContent: "center",
+		
 	},
 	// name: {
 	// 	textAlign: "center",
