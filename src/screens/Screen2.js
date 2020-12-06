@@ -230,7 +230,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(Screen2);
 const Posts = ({ props }) => {
 	return (
 		<View>
-			{props.user.posts.length === 0 && <Text> Share your first Post!</Text>}
+			{props.user.posts && props.user.posts.length !== 0 && (
+				<Text style={{ marginLeft: 20, marginTop: 40, fontSize: 30 }}>
+					Your posts
+				</Text>
+			)}
+			{props.user.posts && props.user.posts.length === 0 && (
+				<Text> Share your first Post!</Text>
+			)}
 			{props.user.posts &&
 				props.user.posts.map((obj) => {
 					if (obj.type === "accomplishment") {
