@@ -16,7 +16,6 @@ const makePost = (name1, name2, text, type) => {
 			type,
 			date: Date.now(),
 		};
-		console.log(post);
 
 		const currentUid = auth.currentUser.uid;
 		await db

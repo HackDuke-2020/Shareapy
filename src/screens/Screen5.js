@@ -65,10 +65,6 @@ class Screen5 extends React.Component {
 		const myCompletedChallenges = props.user.justMyPosts.filter(
 			(obj) => obj.type === "completedchallenge",
 		);
-		console.log(
-			"🚀 ~ file: Screen5.js ~ line 68 ~ Screen5 ~ constructor ~ myCompletedChallenges",
-			myCompletedChallenges,
-		);
 		const completed = myCompletedChallenges.map((obj) => ({
 			text: obj.text,
 			name: obj.name1,
