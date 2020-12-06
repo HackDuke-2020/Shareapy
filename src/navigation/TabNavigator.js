@@ -20,7 +20,7 @@ class TabNavigator extends Component {
 					options={{
 						tabBarIcon: ({ focused }) => (
 							<Icon
-								name="person"
+								name="home"
 								style={{ color: focused ? "#147EFB" : "gray" }}
 							/>
 						),
@@ -32,7 +32,7 @@ class TabNavigator extends Component {
 					options={{
 						tabBarIcon: ({ focused }) => (
 							<Icon
-								name="add"
+								name="person"
 								style={{ color: focused ? "#147EFB" : "gray" }}
 							/>
 						),
@@ -44,7 +44,7 @@ class TabNavigator extends Component {
 					options={{
 						tabBarIcon: ({ focused }) => (
 							<Icon
-								name="ios-log-out"
+								name="information-circle"
 								style={{ color: focused ? "#147EFB" : "gray" }}
 							/>
 						),

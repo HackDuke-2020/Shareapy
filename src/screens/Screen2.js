@@ -56,6 +56,7 @@ class Screen2 extends Component {
 				<Header>
 					<Left>
 						<TouchableOpacity
+							style={{ marginLeft: 15 }}
 							onPress={() => {
 								this.setState({
 									overlayVisible: !this.state.overlayVisible,
@@ -71,11 +72,16 @@ class Screen2 extends Component {
 					</Body>
 					<Right>
 						<TouchableOpacity
+							style={{ marginRight: 15 }}
 							onPress={() => {
 								this.props.navigation.navigate("Screen5");
 							}}
 						>
-							<Icon name="trophy" style={{ color: "#147efb" }} />
+							<Icon
+								type="FontAwesome"
+								name="bar-chart"
+								style={{ color: "#147efb" }}
+							/>
 						</TouchableOpacity>
 					</Right>
 				</Header>
@@ -182,11 +188,11 @@ class Screen2 extends Component {
 				</Modal>
 				<Content>
 					<Image
-						source={require("../../assets/icon.png")}
+						source={require("../../assets/profpic.jpg")}
 						style={styles.profilepic}
 					></Image>
 
-					<Followingers />
+					<Followingers user={this.props.user} />
 					<SettingsBox user={this.props.user} />
 
 					{/* <List>
@@ -230,16 +236,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(Screen2);
 const Posts = ({ props }) => {
 	return (
 		<View>
-			{props.user.posts && props.user.posts.length !== 0 && (
+			{props.user.justMyPosts && props.user.justMyPosts.length !== 0 && (
 				<Text style={{ marginLeft: 20, marginTop: 40, fontSize: 30 }}>
 					Your posts
 				</Text>
 			)}
-			{props.user.posts && props.user.posts.length === 0 && (
+			{props.user.justMyPosts && props.user.justMyPosts.length === 0 && (
 				<Text> Share your first Post!</Text>
 			)}
-			{props.user.posts &&
-				props.user.posts.map((obj) => {
+			{props.user.justMyPosts &&
+				props.user.justMyPosts.map((obj) => {
 					if (obj.type === "accomplishment") {
 						return (
 							<Accomplishment
@@ -301,11 +307,13 @@ const SettingsBox = ({ user }) => {
 		</View>
 	);
 };
-const Followingers = () => {
+const Followingers = ({ user }) => {
 	return (
-		<View style={styles.follows}>
-			<Text>Followers: {"\n"} 837</Text>
-			<Text>Following:{"\n"} 292</Text>
+		<View style={{ ...styles.follows, justifyContent: "space-around" }}>
+			<Text style={{ marginRight: 30 }}>{`Followers\n${
+				user.followers ? user.followers.length : 0
+			}`}</Text>
+			<Text>{`Following\n${user.following ? user.following.length : 0}`}</Text>
 		</View>
 	);
 };
@@ -328,6 +336,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		textAlign: "center",
 		alignSelf: "center",
+		justifyContent: "center",
 	},
 	// name: {
 	// 	textAlign: "center",
@@ -362,11 +371,7 @@ class Accomplishment extends Component {
 					<View
 						style={{ justifyContent: "flex-end", width: 40, flex: 1, left: 20 }}
 					>
-						<Icon
-							style={{ color: "green" }}
-							type="MaterialCommunityIcons"
-							name="trophy"
-						/>
+						<Icon style={{ color: "green" }} name="trophy" />
 					</View>
 				</CardItem>
 				<CardItem>

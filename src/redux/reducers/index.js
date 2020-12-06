@@ -78,7 +78,6 @@ const rootReducer = (state = initialState, action) => {
 		}
 
 		case "SET_SEARCHED_USER": {
-			console.log(action.user);
 			return {
 				...state,
 				searchedUser: action.user,

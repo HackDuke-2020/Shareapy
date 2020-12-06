@@ -16,6 +16,7 @@ const makePost = (name1, name2, text, type) => {
 			type,
 			date: Date.now(),
 		};
+		console.log(post);
 
 		const currentUid = auth.currentUser.uid;
 		await db
@@ -31,7 +32,6 @@ const makePost = (name1, name2, text, type) => {
 
 const acceptChallenge = (name1, name2, text, type) => {
 	return async (dispatch, getState) => {
-		console.log("dooty");
 		if (!name2) {
 			name2 = "";
 		}

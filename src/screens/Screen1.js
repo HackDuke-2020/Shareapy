@@ -47,22 +47,13 @@ class Screen1 extends Component {
 	};
 
 	render() {
-		// console.log(this.props.user.posts);
 		const { width, height } = Dimensions.get("window");
 		return (
 			<Container>
 				<Header>
-					<Left />
-					<Body>
-						<Title>Activity</Title>
-					</Body>
-					<Right
-						style={{
-							marginRight: 5,
-						}}
-					>
+					<Left>
 						<TouchableOpacity
-							style={{ marginRight: 15 }}
+							style={{ marginLeft: 15 }}
 							onPress={() => {
 								this.setState({
 									overlayVisible: !this.state.overlayVisible,
@@ -72,6 +63,26 @@ class Screen1 extends Component {
 						>
 							<Icon name="trophy" style={{ color: "#147efb" }} />
 						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Title>Activity</Title>
+					</Body>
+					<Right
+						style={{
+							marginRight: 5,
+						}}
+					>
+						{/* <TouchableOpacity
+							style={{ marginRight: 15 }}
+							onPress={() => {
+								this.setState({
+									overlayVisible: !this.state.overlayVisible,
+									modalType: "accomplishment",
+								});
+							}}
+						>
+							<Icon name="trophy" style={{ color: "#147efb" }} />
+						</TouchableOpacity> */}
 						<TouchableOpacity
 							style={{ marginRight: 8 }}
 							onPress={() => {
@@ -103,7 +114,7 @@ class Screen1 extends Component {
 							style={{
 								margin: 20,
 								padding: 35,
-								backgroundColor: "white",
+								backgroundColor: "#e0e0e0",
 								borderColor: "#147efb",
 								borderWidth: 3,
 								borderRadius: 30,
@@ -112,7 +123,7 @@ class Screen1 extends Component {
 						>
 							<Header
 								style={{
-									backgroundColor: "white",
+									backgroundColor: "#e0e0e0",
 									marginTop: -30,
 									borderBottomWidth: 1,
 									borderBottomColor: myGray,
@@ -136,7 +147,6 @@ class Screen1 extends Component {
 										>
 											<Input
 												autoCapitalize="sentences"
-												keyboardAppearance="dark"
 												style={{
 													marginRight: 20,
 													marginLeft: 20,
@@ -152,7 +162,6 @@ class Screen1 extends Component {
 									)}
 									<Item rounded style={{ borderColor: "black" }}>
 										<Textarea
-											keyboardAppearance="dark"
 											style={{
 												marginRight: 20,
 												marginLeft: 20,
@@ -205,6 +214,11 @@ class Screen1 extends Component {
 				</Modal>
 				<Content>
 					<View style={styles.container}>
+						{this.props.user.posts && this.props.user.posts.length === 0 && (
+							<View style={{ alignItems: "center" }}>
+								<Text style={{ fontSize: 30 }}>No Posts</Text>
+							</View>
+						)}
 						{this.props.user.posts &&
 							this.props.user.posts.map((obj) => {
 								if (obj.type === "accomplishment") {
@@ -220,9 +234,6 @@ class Screen1 extends Component {
 									const isMe =
 										this.props.user.displayName === obj.name2 &&
 										!this.props.user.completed.includes(obj.text);
-									// console.log(obj.text);
-									// console.log(this.props.user.completed);
-									// console.log("\n");
 									return (
 										<Challenge
 											acceptChallenge={this.props.acceptChallenge}
@@ -261,6 +272,12 @@ class Accomplishment extends Component {
 					marginLeft: 10,
 					marginRight: 10,
 					borderRadius: 15,
+					height: 350,
+					marginBottom: 75,
+					shadowColor: "black",
+					shadowOffset: { width: -3, height: 6 },
+					borderWidth: 10,
+					borderColor: "black",
 				}}
 			>
 				<CardItem header bordered>
@@ -297,6 +314,12 @@ class Challenge extends Component {
 					marginLeft: 10,
 					marginRight: 10,
 					borderRadius: 15,
+					height: 350,
+					marginBottom: 75,
+					shadowColor: "black",
+					shadowOffset: { width: -3, height: 6 },
+					borderWidth: 10,
+					borderColor: "black",
 				}}
 			>
 				<CardItem header bordered>
@@ -331,7 +354,6 @@ class Challenge extends Component {
 								flex: 1,
 							}}
 							onPress={() => {
-								console.log("fuck");
 								this.props.acceptChallenge(
 									name1,
 									name2,
@@ -342,8 +364,8 @@ class Challenge extends Component {
 						>
 							<Icon
 								style={{ color: myBlue, marginTop: 10 }}
-								type="Ionicons"
-								name="checkmark-circle"
+								type="MaterialCommunityIcons"
+								name="shield-check"
 							/>
 							<Text numberOfLines={1}>Mark as Done</Text>
 						</TouchableOpacity>
@@ -364,6 +386,12 @@ class CompletedChallenge extends Component {
 					marginLeft: 10,
 					marginRight: 10,
 					borderRadius: 15,
+					height: 350,
+					marginBottom: 75,
+					shadowColor: "black",
+					shadowOffset: { width: -3, height: 6 },
+					borderWidth: 10,
+					borderColor: "black",
 				}}
 			>
 				<CardItem header bordered>

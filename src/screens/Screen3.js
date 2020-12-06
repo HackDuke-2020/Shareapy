@@ -59,11 +59,12 @@ class Screen3 extends Component {
 					</Body>
 					<Right>
 						<TouchableOpacity
+							style={{ marginRight: 15 }}
 							onPress={() => {
 								this.props.signout();
 							}}
 						>
-							<Icon name="log-out" style={{ color: "gray" }} />
+							<Icon name="log-out" style={{ color: "#147efb" }} />
 						</TouchableOpacity>
 					</Right>
 				</Header>

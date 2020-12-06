@@ -16,11 +16,11 @@ const checkForSignedInUser = () => {
 					.get();
 				const queryData = querySnapshot.data();
 
-				const { messages, following, completed } = queryData;
+				const { following, followers, completed, name } = queryData;
 				let posts = queryData.posts;
 
 				const followersPosts = await getFollowersPosts(following);
-
+				const justMyPosts = posts;
 				posts = [...posts, ...followersPosts];
 
 				if (posts !== undefined) {
@@ -29,12 +29,14 @@ const checkForSignedInUser = () => {
 
 				userData = {
 					email: user.email,
-					displayName: user.displayName,
+					displayName: name,
 					uid: user.uid,
-					messages,
 					isSignedIn: true,
 					posts,
 					completed,
+					justMyPosts,
+					following,
+					followers,
 				};
 			}
 			dispatch({ type: "CHECKED_SIGNED_IN_USER", user: userData });
@@ -84,7 +86,6 @@ const signup = (name, email, password) => {
 				throw { message: "Please enter a name." };
 			}
 			const result = await auth.createUserWithEmailAndPassword(email, password);
-			await result.user.updateProfile({ displayName: name });
 
 			const currentUid = auth.currentUser.uid;
 			await db
@@ -98,6 +99,8 @@ const signup = (name, email, password) => {
 					followers: [],
 					completed: [],
 				});
+
+			await result.user.updateProfile({ displayName: name });
 		} catch (error) {
 			dispatch({ type: "SET_ERROR", errorType: "signupError", error });
 		}

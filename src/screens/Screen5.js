@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	Switch,
 	Dimensions,
+	Animated,
 } from "react-native";
 import {
 	Container,
@@ -37,7 +38,6 @@ const levelUp = 100;
 
 class Profile extends React.Component {
 	render() {
-		//console.log(this.props)
 		return (
 			<View style={styles.profile}>
 				<Text style={styles.title}>{this.props.user.name}</Text>
@@ -50,7 +50,7 @@ class Profile extends React.Component {
 class Achievements extends React.Component {
 	render() {
 		return (
-			<View style={styles.achievement}>
+			<View style={{ ...styles.achievement, height: 500 }}>
 				<Text style={styles.title}>Recent Achievements</Text>
 				<DeckSwiper1 dataSource={this.props.user} />
 			</View>
@@ -59,43 +59,64 @@ class Achievements extends React.Component {
 }
 
 class Screen5 extends React.Component {
-	constructor() {
+	constructor(props) {
 		super();
+
+		const myCompletedChallenges = props.user.justMyPosts.filter(
+			(obj) => obj.type === "completedchallenge",
+		);
+		console.log(
+			"🚀 ~ file: Screen5.js ~ line 68 ~ Screen5 ~ constructor ~ myCompletedChallenges",
+			myCompletedChallenges,
+		);
+		const completed = myCompletedChallenges.map((obj) => ({
+			text: obj.text,
+			name: obj.name1,
+			description: new Date(obj.date).toLocaleDateString("en", {
+				year: "numeric",
+				month: "numeric",
+				day: "numeric",
+			}),
+			profImage: require("../../assets/profilepic.png"),
+			achImage: require("../../assets/achpic.png"),
+		}));
+
 		this.state = {
 			user: {
-				name: "Username",
-				points: 30,
+				name: props.user.displayName,
+				points: props.user.justMyPosts.length * 10,
 				level: "Novice",
-				completed: [
-					{
-						text: "challenge1",
-						name: "name1",
-						description: "description1",
-						profImage: require("../../assets/profilepic.png"),
-						achImage: require("../../assets/achpic.png"),
-					},
-					{
-						text: "challenge2",
-						name: "name2",
-						description: "description2",
-						profImage: require("../../assets/profilepic.png"),
-						image: require("../../assets/achpic.png"),
-					},
-					{
-						text: "challenge3",
-						name: "name3",
-						description: "description3",
-						profImage: require("../../assets/profilepic.png"),
-						image: require("../../assets/achpic.png"),
-					},
-					{
-						text: "challenge4",
-						name: "name4",
-						description: "description4",
-						profImage: require("../../assets/profilepic.png"),
-						achImage: require("../../assets/achpic.png"),
-					},
-				],
+				completed,
+				// completed: [
+				// 	{
+				// 		text: "challenge1",
+				// 		name: "name1",
+				// 		description: "description1",
+				// 		profImage: require("../../assets/profilepic.png"),
+				// 		achImage: require("../../assets/achpic.png"),
+				// 	},
+				// 	{
+				// 		text: "challenge2",
+				// 		name: "name2",
+				// 		description: "description2",
+				// 		profImage: require("../../assets/profilepic.png"),
+				// 		achImage: require("../../assets/achpic.png"),
+				// 	},
+				// 	{
+				// 		text: "challenge3",
+				// 		name: "name3",
+				// 		description: "description3",
+				// 		profImage: require("../../assets/profilepic.png"),
+				// 		achImage: require("../../assets/achpic.png"),
+				// 	},
+				// 	{
+				// 		text: "challenge4",
+				// 		name: "name4",
+				// 		description: "description4",
+				// 		profImage: require("../../assets/profilepic.png"),
+				// 		achImage: require("../../assets/achpic.png"),
+				// 	},
+				// ],
 			},
 		};
 	}
@@ -110,11 +131,12 @@ class Screen5 extends React.Component {
 				<Header>
 					<Left>
 						<TouchableOpacity
+							style={{ marginLeft: 15 }}
 							onPress={() => {
 								this.props.navigation.navigate("Main");
 							}}
 						>
-							<Icon name="ios-arrow-back" />
+							<Icon style={{ color: "#147efb" }} name="ios-arrow-back" />
 						</TouchableOpacity>
 					</Left>
 					<Body>
@@ -160,7 +182,7 @@ class Screen5 extends React.Component {
 					</ScrollView>
 					<View style={styles.chartPoint}>
 						<Text style={styles.chartPoint}>{this.state.user.points}</Text>
-						<Text style={styles.chartPoint1}>points</Text>
+						<Text style={styles.chartPoint1}>Points</Text>
 					</View>
 				</Content>
 			</Container>
@@ -168,7 +190,9 @@ class Screen5 extends React.Component {
 	}
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	user: state.user,
+});
 const mapDispatchToProps = (dispatch) => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Screen5);
